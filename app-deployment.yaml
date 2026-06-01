@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eisr-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eisr-app
+  template:
+    metadata:
+      labels:
+        app: eisr-app
+    spec:
+      containers:
+      - name: eisr-app
+        image: sayyedashshu/eisr-app:latest
+        ports:
+          - containerPort: 3000
+        env:
+          - name: NODE_ENV
+            value: "production"
+          - name: MYSQL_HOST
+            value: "shared-mysql"
+          - name: MYSQL_PORT
+            value: "3306"
+          - name: MYSQL_USER
+            value: "eisr_user"
+          - name: MYSQL_DATABASE
+            value: "eisr_db"
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: eisr-secret
+                key: MYSQL_PASSWORD
